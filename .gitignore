@@ -3,3 +3,5 @@ dist/
 logs/
 .env.*
 !.env.example
+**/uploads/*
+!**/uploads/.gitkeep
