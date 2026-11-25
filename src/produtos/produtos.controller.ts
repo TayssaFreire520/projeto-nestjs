@@ -2,7 +2,6 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProdutosService } from './produtos.service.js';
 import { CreateProdutoDto } from './dto/create-produto.dto.js';
-
 @ApiTags('produtos')
 @Controller('produtos')
 export class ProdutosController {
@@ -14,7 +13,15 @@ export class ProdutosController {
     status: 201,
     description: 'Produto criado com sucesso.',
   })
-  criar(@Body() createProdutoDto: CreateProdutoDto) {
+  @ApiResponse({
+    status: 400,
+    description: 'Dados recusados pelo Schema.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Produto já registrado.',
+  })
+  async criar(@Body() createProdutoDto: CreateProdutoDto) {
     return this.produtosService.create(createProdutoDto);
   }
   // GET /produtos/:id
@@ -28,10 +35,7 @@ export class ProdutosController {
     status: 400,
     description: 'ID em formato inválido.',
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Produto não encontrado.',
-  })
+  @ApiResponse({ status: 404, description: 'Produto não encontrado.' })
   buscarPorId(@Param('id') id: string) {
     return this.produtosService.findOne(id);
   }
